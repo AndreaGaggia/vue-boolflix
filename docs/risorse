@@ -1,0 +1,11 @@
+le bandierine le ho trovate qui:
+https://www.countryflags.io/
+
+seguendo questo template:
+<img src="https://www.countryflags.io/:country_code/:style/:size.png">
+
+es:
+<img src="https://www.countryflags.io/be/flat/64.png">
+
+
+

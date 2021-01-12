@@ -6,6 +6,12 @@
         <title>Boolflix</title>
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+            integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+            crossorigin="anonymous"
+        />
         <link rel="stylesheet" href="./assets/css/style.css" />
     </head>
     <body>
@@ -21,10 +27,23 @@
             <main>
                 <div class="films" v-if="films">
                     <div class="film" v-for="film in films">
-                        <p class="title">{{ film.title }}</p>
-                        <p class="original-title">{{ film.original_title }}</p>
+                        <p class="title" v-if="film.title">{{ film.title }}</p>
+                        <p class="original-title">
+                            <span v-if="film.original_title"
+                                >{{ film.original_title }}</span
+                            >
+                            <span v-else>{{ film.original_name }}</span>
+                        </p>
                         <p class="lang">{{ film.original_language }}</p>
                         <p class="rating">{{ film.vote_average }}</p>
+                        <p class="stars">
+                            <i v-for="n in film.stars" class="fas fa-star"></i
+                            ><i
+                                v-for="n in (5 - film.stars)"
+                                class="far fa-star"
+                            ></i>
+                        </p>
+                        <img :src="film.flag" :alt="film.original_language" />
                     </div>
                 </div>
             </main>
