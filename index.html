@@ -27,6 +27,17 @@
             <main>
                 <div class="films" v-if="films">
                     <div class="film" v-for="film in films">
+                        <img
+                            v-if="film.poster_path"
+                            :src="`https://image.tmdb.org/t/p/w342${film.poster_path}`"
+                            alt="copertina"
+                        />
+                        <img
+                            v-else
+                            src="./assets/img/no-poster.jpg"
+                            alt=""
+                            width="342"
+                        />
                         <p class="title" v-if="film.title">{{ film.title }}</p>
                         <p class="original-title">
                             <span v-if="film.original_title"
