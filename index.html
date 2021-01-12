@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Boolflix</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <link rel="stylesheet" href="./assets/css/style.css" />
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <h1>BOOLFLIX</h1>
+                <div class="searchbar">
+                    <input type="text" v-model="searchString" />
+                    <button @click="search">Cerca</button>
+                </div>
+            </header>
+
+            <main>
+                <div class="films" v-if="films">
+                    <div class="film" v-for="film in films">
+                        <p class="title">{{ film.title }}</p>
+                        <p class="original-title">{{ film.original_title }}</p>
+                        <p class="lang">{{ film.original_language }}</p>
+                        <p class="rating">{{ film.vote_average }}</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <script src="./assets/js/main.js"></script>
+    </body>
+</html>
