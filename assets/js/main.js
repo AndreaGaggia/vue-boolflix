@@ -40,5 +40,12 @@ const app = new Vue({
                 `https://api.themoviedb.org/3/search/tv?api_key=211f9317ff0f147fee603f1b9da7607e&language=it_IT&query=${this.searchString}`
             );
         },
+        cardBg(p_path) {
+            if (p_path) {
+                return `background-image: url(https://image.tmdb.org/t/p/w342${p_path}); background-size: cover`;
+            } else {
+                return "background-image: url(./assets/img/no-poster.jpg); background-size: cover";
+            }
+        },
     },
 });

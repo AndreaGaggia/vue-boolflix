@@ -19,42 +19,72 @@
             <header>
                 <h1>BOOLFLIX</h1>
                 <div class="searchbar">
-                    <input type="text" v-model="searchString" />
-                    <button @click="search">Cerca</button>
+                    <input
+                        @keydown.enter="search"
+                        type="text"
+                        placeholder="Cerca film e serie"
+                        v-model="searchString"
+                    />
                 </div>
             </header>
 
             <main>
                 <div class="films" v-if="films">
-                    <div class="film" v-for="film in films">
-                        <img
-                            v-if="film.poster_path"
-                            :src="`https://image.tmdb.org/t/p/w342${film.poster_path}`"
-                            alt="copertina"
-                        />
-                        <img
-                            v-else
-                            src="./assets/img/no-poster.jpg"
-                            alt=""
-                            width="342"
-                        />
-                        <p class="title" v-if="film.title">{{ film.title }}</p>
-                        <p class="original-title">
-                            <span v-if="film.original_title"
-                                >{{ film.original_title }}</span
-                            >
-                            <span v-else>{{ film.original_name }}</span>
-                        </p>
-                        <p class="lang">{{ film.original_language }}</p>
-                        <p class="rating">{{ film.vote_average }}</p>
-                        <p class="stars">
-                            <i v-for="n in film.stars" class="fas fa-star"></i
-                            ><i
-                                v-for="n in (5 - film.stars)"
-                                class="far fa-star"
-                            ></i>
-                        </p>
-                        <img :src="film.flag" :alt="film.original_language" />
+                    <div
+                        class="film"
+                        v-for="film in films"
+                        :style="cardBg(film.poster_path)"
+                    >
+                        <div class="film-info">
+                            <!-- <img
+                                v-if="film.poster_path"
+                                :src="`https://image.tmdb.org/t/p/w342${film.poster_path}`"
+                            />
+                            <img
+                                v-else
+                                src="./assets/img/no-poster.jpg"
+                                width="342"
+                            /> -->
+                            <p class="title" v-if="film.title">
+                                <strong>Titolo:</strong> {{ film.title }}
+                            </p>
+                            <p class="original-title">
+                                <span v-if="film.original_title"
+                                    ><strong>Titolo originale:</strong> {{
+                                    film.original_title }}</span
+                                >
+                                <span v-else>{{ film.original_name }}</span>
+                            </p>
+                            <!-- <p class="lang">{{ film.original_language }}</p>
+                            <p class="rating">{{ film.vote_average }}</p> -->
+                            <p class="stars">
+                                <strong>Voto:</strong>
+                                <i
+                                    v-for="n in film.stars"
+                                    class="fas fa-star"
+                                ></i
+                                ><i
+                                    v-for="n in (5 - film.stars)"
+                                    class="far fa-star"
+                                ></i>
+                            </p>
+                            <p class="lang">
+                                <strong>Lingua:</strong>
+                                <span
+                                    v-if="film.original_language == 'en' || film.original_language == 'ja'"
+                                    >{{ film.original_language }}</span
+                                >
+                                <img
+                                    v-else
+                                    :src="film.flag"
+                                    style="vertical-align: middle"
+                                />
+                            </p>
+                            <p class="description">
+                                <strong>Overview:</strong>
+                                {{ film.overview }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </main>
