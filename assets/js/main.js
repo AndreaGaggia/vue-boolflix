@@ -15,8 +15,8 @@ const app = new Vue({
     },
     methods: {
         search() {
-            this.getFilms();
-            this.getSeries();
+            this.getFilms;
+            this.getSeries;
 
             Promise.all([this.getFilms(), this.getSeries()]).then((results) => {
                 let films = results[0].data.results;
@@ -27,12 +27,44 @@ const app = new Vue({
                     return (film.stars = Math.round(film.vote_average / 2));
                 });
                 this.films.map((film) => {
-                    return (film.flag = `https://www.countryflags.io/${film.original_language}/flat/32.png`);
+                    return (film.flag = this.getFlag(film.original_language));
                 });
-                this.films.map((film) => {
-                    return (film.emoji = this.getFlag(film.original_language));
+
+                this.films.forEach((film) => {
+                    if (!film.original_name) {
+                        //cioè se non sono serie e quindi sono films
+                        this.getMovieDetails(film.id);
+                        this.getMovieCredits(film.id);
+
+                        Promise.all([
+                            this.getMovieDetails(film.id),
+                            this.getMovieCredits(film.id),
+                        ])
+                            .then((responses) => {
+                                let genres = responses[0].data.genres;
+                                let cast = responses[1].data.cast;
+                                film.genre_names = [];
+                                film.cast = [];
+                                for (const genre of genres) {
+                                    film.genre_names.push(genre["name"]);
+                                }
+                                for (let i = 0; i < 5; i++) {
+                                    film.cast.push(cast[i].name);
+                                }
+                            })
+                            .catch((error) => console.log(error));
+                    }
                 });
             });
+            // this.getMovieDetails;
+            // this.getMovieCredits;
+
+            // Promise.all([this.getMovieDetails(), this.getMovieCredits()]).then(
+            //     (results) => {
+            //         console.log(results[0]);
+            //         console.log(results[1]);
+            //     }
+            // );
         },
         getFilms() {
             return axios.get(
@@ -42,6 +74,16 @@ const app = new Vue({
         getSeries() {
             return axios.get(
                 `https://api.themoviedb.org/3/search/tv?api_key=211f9317ff0f147fee603f1b9da7607e&language=it_IT&query=${this.searchString}`
+            );
+        },
+        getMovieDetails(film_id) {
+            return axios.get(
+                `https://api.themoviedb.org/3/movie/${film_id}?api_key=211f9317ff0f147fee603f1b9da7607e`
+            );
+        },
+        getMovieCredits(film_id) {
+            return axios.get(
+                `https://api.themoviedb.org/3/movie/${film_id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
             );
         },
         cardBg(p_path) {
@@ -63,6 +105,13 @@ const app = new Vue({
                 }
             });
             return emoji;
+        },
+        cutOverview(overview, length) {
+            let cutted = "";
+            overview != ""
+                ? (cutted = overview.slice(0, length) + "...")
+                : (cutted = "no overview available");
+            return cutted;
         },
     },
     created() {

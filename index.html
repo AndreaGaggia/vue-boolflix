@@ -36,18 +36,18 @@
                         :style="cardBg(film.poster_path)"
                     >
                         <div class="film-info">
-                            <p class="title" v-if="film.title">
-                                <strong>Titolo:</strong> {{ film.title }}
-                            </p>
                             <p class="original-title">
                                 <span v-if="film.original_title"
-                                    ><strong>Titolo originale:</strong> {{
+                                    ><strong>Original Title:</strong> {{
                                     film.original_title }}</span
                                 >
                                 <span v-else>{{ film.original_name }}</span>
                             </p>
+                            <p class="title" v-if="film.title">
+                                <strong>Title:</strong> {{ film.title }}
+                            </p>
                             <p class="stars">
-                                <strong>Voto:</strong>
+                                <strong>Rating:</strong>
                                 <i
                                     v-for="n in film.stars"
                                     class="fas fa-star"
@@ -57,11 +57,19 @@
                                     class="far fa-star"
                                 ></i>
                             </p>
-                            <p class="emoji-flag">Language: {{ film.emoji }}</p>
+                            <p class="lang">
+                                <strong>Language:</strong> {{ film.flag }}
+                            </p>
                             <p class="overview">
                                 <strong>Overview:</strong>
-                                {{ film.overview }}
+                                {{ cutOverview(film.overview, 100) }}
                             </p>
+                            <!-- <p class="cast" v-if="film.cast">
+                                <strong>Cast:</strong>
+                                <span v-for="actor in film.cast"
+                                    >{{ actor }}</span
+                                >
+                            </p> -->
                         </div>
                     </div>
                 </div>
