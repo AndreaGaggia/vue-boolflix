@@ -18,6 +18,7 @@ i {
 
 h1 {
     color: red;
+    font-weight: 300;
 }
 
 /* ! HEADER */
@@ -37,6 +38,9 @@ input[type="text"] {
 }
 
 /* ! MAIN */
+main {
+    padding-left: 20px;
+}
 
 .films {
     display: flex;
@@ -50,6 +54,7 @@ input[type="text"] {
     height: 500px;
     cursor: pointer;
     margin: 50px 0;
+    margin-right: 5px;
 }
 .film:hover .film-info {
     display: flex;

@@ -11,6 +11,7 @@ const app = new Vue({
     data: {
         searchString: "",
         films: null,
+        flags: null,
     },
     methods: {
         search() {
@@ -27,6 +28,9 @@ const app = new Vue({
                 });
                 this.films.map((film) => {
                     return (film.flag = `https://www.countryflags.io/${film.original_language}/flat/32.png`);
+                });
+                this.films.map((film) => {
+                    return (film.emoji = this.getFlag(film.original_language));
                 });
             });
         },
@@ -47,5 +51,25 @@ const app = new Vue({
                 return "background-image: url(./assets/img/no-poster.jpg); background-size: cover";
             }
         },
+        getFlag(film_lang) {
+            let param = film_lang.toUpperCase();
+            let emoji = param;
+            this.flags.forEach((flag) => {
+                if (param === flag.code) emoji = flag.emoji;
+                else if (param === "EN") {
+                    if (flag.code === "GB") emoji = flag.emoji;
+                } else if (param === "JA") {
+                    if (flag.code === "JP") emoji = flag.emoji;
+                }
+            });
+            return emoji;
+        },
+    },
+    created() {
+        axios
+            .get(
+                "https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis.pretty.json"
+            )
+            .then((response) => (this.flags = response.data));
     },
 });

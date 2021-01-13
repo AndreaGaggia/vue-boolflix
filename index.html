@@ -36,15 +36,6 @@
                         :style="cardBg(film.poster_path)"
                     >
                         <div class="film-info">
-                            <!-- <img
-                                v-if="film.poster_path"
-                                :src="`https://image.tmdb.org/t/p/w342${film.poster_path}`"
-                            />
-                            <img
-                                v-else
-                                src="./assets/img/no-poster.jpg"
-                                width="342"
-                            /> -->
                             <p class="title" v-if="film.title">
                                 <strong>Titolo:</strong> {{ film.title }}
                             </p>
@@ -55,8 +46,6 @@
                                 >
                                 <span v-else>{{ film.original_name }}</span>
                             </p>
-                            <!-- <p class="lang">{{ film.original_language }}</p>
-                            <p class="rating">{{ film.vote_average }}</p> -->
                             <p class="stars">
                                 <strong>Voto:</strong>
                                 <i
@@ -68,19 +57,8 @@
                                     class="far fa-star"
                                 ></i>
                             </p>
-                            <p class="lang">
-                                <strong>Lingua:</strong>
-                                <span
-                                    v-if="film.original_language == 'en' || film.original_language == 'ja'"
-                                    >{{ film.original_language }}</span
-                                >
-                                <img
-                                    v-else
-                                    :src="film.flag"
-                                    style="vertical-align: middle"
-                                />
-                            </p>
-                            <p class="description">
+                            <p class="emoji-flag">Language: {{ film.emoji }}</p>
+                            <p class="overview">
                                 <strong>Overview:</strong>
                                 {{ film.overview }}
                             </p>
