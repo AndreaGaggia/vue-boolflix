@@ -49,27 +49,29 @@
                             <p class="stars">
                                 <strong>Rating:</strong>
                                 <i
-                                    v-for="n in film.stars"
+                                    v-for="n in getRate(film.vote_average)"
                                     class="fas fa-star"
                                 ></i
                                 ><i
-                                    v-for="n in (5 - film.stars)"
+                                    v-for="n in (5 - getRate(film.vote_average))"
                                     class="far fa-star"
                                 ></i>
                             </p>
                             <p class="lang">
-                                <strong>Language:</strong> {{ film.flag }}
+                                <strong>Language:</strong> {{
+                                getFlag(film.original_language) }}
                             </p>
                             <p class="overview">
                                 <strong>Overview:</strong>
                                 {{ cutOverview(film.overview, 100) }}
                             </p>
-                            <!-- <p class="cast" v-if="film.cast">
+                            <!-- cast -->
+                            <p class="cast" v-if="film.cast">
                                 <strong>Cast:</strong>
-                                <span v-for="actor in film.cast"
-                                    >{{ actor }}</span
-                                >
-                            </p> -->
+                                <span v-for="person in film.cast"
+                                    >{{ person }},
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -17,54 +17,27 @@ const app = new Vue({
         search() {
             this.getFilms;
             this.getSeries;
-
             Promise.all([this.getFilms(), this.getSeries()]).then((results) => {
                 let films = results[0].data.results;
                 let series = results[1].data.results;
                 this.films = films.concat(series);
 
-                this.films.map((film) => {
-                    return (film.stars = Math.round(film.vote_average / 2));
-                });
-                this.films.map((film) => {
-                    return (film.flag = this.getFlag(film.original_language));
-                });
-
                 this.films.forEach((film) => {
-                    if (!film.original_name) {
-                        //cioè se non sono serie e quindi sono films
-                        this.getMovieDetails(film.id);
-                        this.getMovieCredits(film.id);
-
-                        Promise.all([
-                            this.getMovieDetails(film.id),
-                            this.getMovieCredits(film.id),
-                        ])
-                            .then((responses) => {
-                                let genres = responses[0].data.genres;
-                                let cast = responses[1].data.cast;
-                                film.genre_names = [];
-                                film.cast = [];
-                                for (const genre of genres) {
-                                    film.genre_names.push(genre["name"]);
-                                }
-                                for (let i = 0; i < 5; i++) {
-                                    film.cast.push(cast[i].name);
-                                }
-                            })
-                            .catch((error) => console.log(error));
+                    if (!film.hasOwnProperty("original_name")) {
+                        this.addCast(film);
                     }
                 });
             });
-            // this.getMovieDetails;
-            // this.getMovieCredits;
-
-            // Promise.all([this.getMovieDetails(), this.getMovieCredits()]).then(
-            //     (results) => {
-            //         console.log(results[0]);
-            //         console.log(results[1]);
-            //     }
-            // );
+            this.searchString = "";
+        },
+        addCast(film) {
+            let risultatoCast = this.getMovieCast(film.id);
+            return Vue.set(film, "cast", risultatoCast);
+            // console.log("risultato addCastCast:");
+            // console.log(risultatoCast);
+            // film.cast = this.getMovieCast(film.id);
+            // console.log(film.cast);
+            // console.log(typeof film.cast);
         },
         getFilms() {
             return axios.get(
@@ -76,15 +49,47 @@ const app = new Vue({
                 `https://api.themoviedb.org/3/search/tv?api_key=211f9317ff0f147fee603f1b9da7607e&language=it_IT&query=${this.searchString}`
             );
         },
-        getMovieDetails(film_id) {
-            return axios.get(
-                `https://api.themoviedb.org/3/movie/${film_id}?api_key=211f9317ff0f147fee603f1b9da7607e`
-            );
+        getMovieGenres(film_id) {
+            let filmGenres = [];
+            axios
+                .get(
+                    `https://api.themoviedb.org/3/movie/${film_id}?api_key=211f9317ff0f147fee603f1b9da7607e`
+                )
+                .then((response) => {
+                    let genres = response.data.genres;
+                    if (genres)
+                        genres.forEach((genre) => filmGenres.push(genre.name));
+                });
+            return filmGenres;
         },
-        getMovieCredits(film_id) {
-            return axios.get(
-                `https://api.themoviedb.org/3/movie/${film_id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
-            );
+        getMovieCast(film_id) {
+            let movieCast = [];
+            axios
+                .get(
+                    `https://api.themoviedb.org/3/movie/${film_id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
+                )
+                .then((response) => {
+                    let cast = response.data.cast;
+                    //console.log("richiesta cast");
+                    if (cast && cast.length >= 5) {
+                        for (let i = 0; i < 5; i++) {
+                            console.log(cast[i].name, film_id);
+                            movieCast.push(cast[i].name);
+                        }
+                    } else if (cast && cast.length < 5) {
+                        //es. movie 587870
+                        for (let i = 0; i < cast.length; i++) {
+                            console.log(cast[i].name, film_id);
+                            movieCast.push(cast[i].name);
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    movieCast = "non disponibile";
+                });
+            console.log(movieCast);
+            return movieCast;
         },
         cardBg(p_path) {
             if (p_path) {
@@ -94,17 +99,20 @@ const app = new Vue({
             }
         },
         getFlag(film_lang) {
-            let param = film_lang.toUpperCase();
-            let emoji = param;
+            let lang = film_lang.toUpperCase();
+            let emoji = lang;
             this.flags.forEach((flag) => {
-                if (param === flag.code) emoji = flag.emoji;
-                else if (param === "EN") {
+                if (lang === flag.code) emoji = flag.emoji;
+                else if (lang === "EN") {
                     if (flag.code === "GB") emoji = flag.emoji;
-                } else if (param === "JA") {
+                } else if (lang === "JA") {
                     if (flag.code === "JP") emoji = flag.emoji;
                 }
             });
             return emoji;
+        },
+        getRate(vote) {
+            return Math.round(vote / 2);
         },
         cutOverview(overview, length) {
             let cutted = "";
@@ -122,3 +130,24 @@ const app = new Vue({
             .then((response) => (this.flags = response.data));
     },
 });
+
+// this.films.forEach((film) => {
+//     if (!film.hasOwnProperty("original_name") && film.id) {
+//         axios
+//             .get(
+//                 `https://api.themoviedb.org/3/movie/${film.id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
+//             )
+//             .then((response) => {
+//                 let cast5 = [];
+//                 let castAll = response.data.cast;
+//                 if (castAll) {
+//                     for (let i = 0; i < 5; i++) {
+//                         cast5.push(castAll[i].name);
+//                     }
+//                 }
+//                 console.log(cast5);
+//                 film.cast = cast5;
+//             })
+//             .catch(() => console.log("Cast non disponibile"));
+//     }
+// });
