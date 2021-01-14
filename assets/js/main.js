@@ -21,23 +21,31 @@ const app = new Vue({
                 let films = results[0].data.results;
                 let series = results[1].data.results;
                 this.films = films.concat(series);
-
-                this.films.forEach((film) => {
-                    if (!film.hasOwnProperty("original_name")) {
-                        this.addCast(film);
-                    }
-                });
+                //add cast for both movies and series
+                this.films.forEach((film) => this.addCast(film));
+                //add genres
+                this.films.forEach((film) => this.addGenres(film));
             });
             this.searchString = "";
         },
         addCast(film) {
-            let risultatoCast = this.getMovieCast(film.id);
-            return Vue.set(film, "cast", risultatoCast);
-            // console.log("risultato addCastCast:");
-            // console.log(risultatoCast);
-            // film.cast = this.getMovieCast(film.id);
-            // console.log(film.cast);
-            // console.log(typeof film.cast);
+            if (film.hasOwnProperty("original_name")) {
+                return Vue.set(film, "cast", this.getSerieCast(film.id));
+            } else return Vue.set(film, "cast", this.getMovieCast(film.id));
+        },
+        addGenres(film) {
+            if (film.hasOwnProperty("original_name")) {
+                return Vue.set(
+                    film,
+                    "genre_names",
+                    this.getSerieGenres(film.id)
+                );
+            } else
+                return Vue.set(
+                    film,
+                    "genre_names",
+                    this.getMovieGenres(film.id)
+                );
         },
         getFilms() {
             return axios.get(
@@ -51,6 +59,7 @@ const app = new Vue({
         },
         getMovieGenres(film_id) {
             let filmGenres = [];
+
             axios
                 .get(
                     `https://api.themoviedb.org/3/movie/${film_id}?api_key=211f9317ff0f147fee603f1b9da7607e`
@@ -59,8 +68,28 @@ const app = new Vue({
                     let genres = response.data.genres;
                     if (genres)
                         genres.forEach((genre) => filmGenres.push(genre.name));
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
             return filmGenres;
+        },
+        getSerieGenres(film_id) {
+            let serieGenres = [];
+
+            axios
+                .get(
+                    `https://api.themoviedb.org/3/tv/${film_id}?api_key=211f9317ff0f147fee603f1b9da7607e`
+                )
+                .then((response) => {
+                    let genres = response.data.genres;
+                    if (genres)
+                        genres.forEach((genre) => serieGenres.push(genre.name));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            return serieGenres;
         },
         getMovieCast(film_id) {
             let movieCast = [];
@@ -70,26 +99,44 @@ const app = new Vue({
                 )
                 .then((response) => {
                     let cast = response.data.cast;
-                    //console.log("richiesta cast");
                     if (cast && cast.length >= 5) {
                         for (let i = 0; i < 5; i++) {
-                            console.log(cast[i].name, film_id);
                             movieCast.push(cast[i].name);
                         }
                     } else if (cast && cast.length < 5) {
                         //es. movie 587870
                         for (let i = 0; i < cast.length; i++) {
-                            console.log(cast[i].name, film_id);
                             movieCast.push(cast[i].name);
                         }
                     }
                 })
                 .catch((error) => {
                     console.log(error);
-                    movieCast = "non disponibile";
                 });
-            console.log(movieCast);
             return movieCast;
+        },
+        getSerieCast(film_id) {
+            let serieCast = [];
+            axios
+                .get(
+                    `https://api.themoviedb.org/3/tv/${film_id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
+                )
+                .then((response) => {
+                    let cast = response.data.cast;
+                    if (cast && cast.length >= 5) {
+                        for (let i = 0; i < 5; i++) {
+                            serieCast.push(cast[i].name);
+                        }
+                    } else if (cast && cast.length < 5) {
+                        for (let i = 0; i < cast.length; i++) {
+                            serieCast.push(cast[i].name);
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            return serieCast;
         },
         cardBg(p_path) {
             if (p_path) {
@@ -118,7 +165,7 @@ const app = new Vue({
             let cutted = "";
             overview != ""
                 ? (cutted = overview.slice(0, length) + "...")
-                : (cutted = "no overview available");
+                : (cutted = "overview not available");
             return cutted;
         },
     },

@@ -66,11 +66,30 @@
                                 {{ cutOverview(film.overview, 100) }}
                             </p>
                             <!-- cast -->
-                            <p class="cast" v-if="film.cast">
+                            <p
+                                class="cast"
+                                v-if="film.cast && film.cast.length != 0"
+                            >
                                 <strong>Cast:</strong>
                                 <span v-for="person in film.cast"
-                                    >{{ person }},
+                                    >{{ person }}
                                 </span>
+                            </p>
+                            <p class="cast" v-else>
+                                <strong>Cast:</strong> cast not available
+                            </p>
+                            <!-- genres -->
+                            <p
+                                class="genres"
+                                v-if="film.genre_names && film.genre_names.length != 0"
+                            >
+                                <strong>Genres:</strong>
+                                <span v-for="genre in film.genre_names"
+                                    >{{ genre }}
+                                </span>
+                            </p>
+                            <p class="cast" v-else>
+                                <strong>Genres:</strong> info not available
                             </p>
                         </div>
                     </div>
