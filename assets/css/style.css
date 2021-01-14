@@ -19,6 +19,7 @@ i {
 h1 {
     color: red;
     font-weight: 300;
+    margin-right: 40px;
 }
 
 /* ! HEADER */
@@ -28,6 +29,23 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+}
+
+.left-content {
+    display: flex;
+    align-items: baseline;
+}
+.genre-selection label {
+    color: #fff;
+    margin-right: 10px;
+}
+.genre-selection select {
+    outline: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    padding: 3px 6px;
 }
 
 input[type="text"] {

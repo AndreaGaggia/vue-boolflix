@@ -17,7 +17,18 @@
     <body>
         <div id="app">
             <header>
-                <h1>BOOLFLIX</h1>
+                <div class="left-content">
+                    <h1>BOOLFLIX</h1>
+                    <div class="genre-selection" v-if="films">
+                        <label for="filter">Filter by genre</label>
+                        <select name="" id="filter">
+                            <option value="All">All</option>
+                            <option v-for="genre in options" :value="genre">
+                                {{ genre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <div class="searchbar">
                     <input
                         @keydown.enter="search"
@@ -76,7 +87,7 @@
                                 </span>
                             </p>
                             <p class="cast" v-else>
-                                <strong>Cast:</strong> cast not available
+                                <strong>Cast:</strong> not available
                             </p>
                             <!-- genres -->
                             <p
@@ -89,7 +100,7 @@
                                 </span>
                             </p>
                             <p class="cast" v-else>
-                                <strong>Genres:</strong> info not available
+                                <strong>Genres:</strong> not available
                             </p>
                         </div>
                     </div>

@@ -1,20 +1,16 @@
 //* API Key = 211f9317ff0f147fee603f1b9da7607e
 
-/*
-esempio chiamata per serie tv
-https://api.themoviedb.org/3/search/tv?api_key=e99307154c6dfb0b4750f6603256716d&language=it_IT&query=s
-crubs
-*/
-
 const app = new Vue({
     el: "#app",
     data: {
         searchString: "",
         films: null,
         flags: null,
+        options: [],
     },
     methods: {
         search() {
+            this.options = [];
             this.getFilms;
             this.getSeries;
             Promise.all([this.getFilms(), this.getSeries()]).then((results) => {
@@ -28,6 +24,7 @@ const app = new Vue({
             });
             this.searchString = "";
         },
+        generateOptions() {},
         addCast(film) {
             if (film.hasOwnProperty("original_name")) {
                 return Vue.set(film, "cast", this.getSerieCast(film.id));
@@ -67,7 +64,11 @@ const app = new Vue({
                 .then((response) => {
                     let genres = response.data.genres;
                     if (genres)
-                        genres.forEach((genre) => filmGenres.push(genre.name));
+                        genres.forEach((genre) => {
+                            filmGenres.push(genre.name);
+                            this.options.push(genre.name);
+                            this.options = Array.from(new Set(this.options));
+                        });
                 })
                 .catch((error) => {
                     console.log(error);
@@ -84,7 +85,11 @@ const app = new Vue({
                 .then((response) => {
                     let genres = response.data.genres;
                     if (genres)
-                        genres.forEach((genre) => serieGenres.push(genre.name));
+                        genres.forEach((genre) => {
+                            serieGenres.push(genre.name);
+                            this.options.push(genre.name);
+                            this.options = Array.from(new Set(this.options));
+                        });
                 })
                 .catch((error) => {
                     console.log(error);
@@ -165,7 +170,7 @@ const app = new Vue({
             let cutted = "";
             overview != ""
                 ? (cutted = overview.slice(0, length) + "...")
-                : (cutted = "overview not available");
+                : (cutted = "not available");
             return cutted;
         },
     },
@@ -177,24 +182,3 @@ const app = new Vue({
             .then((response) => (this.flags = response.data));
     },
 });
-
-// this.films.forEach((film) => {
-//     if (!film.hasOwnProperty("original_name") && film.id) {
-//         axios
-//             .get(
-//                 `https://api.themoviedb.org/3/movie/${film.id}/credits?api_key=211f9317ff0f147fee603f1b9da7607e`
-//             )
-//             .then((response) => {
-//                 let cast5 = [];
-//                 let castAll = response.data.cast;
-//                 if (castAll) {
-//                     for (let i = 0; i < 5; i++) {
-//                         cast5.push(castAll[i].name);
-//                     }
-//                 }
-//                 console.log(cast5);
-//                 film.cast = cast5;
-//             })
-//             .catch(() => console.log("Cast non disponibile"));
-//     }
-// });
