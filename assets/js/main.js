@@ -8,7 +8,6 @@ const app = new Vue({
         flags: [],
         options: [],
         optionValue: "",
-        filtered: null,
         all: null,
     },
     methods: {

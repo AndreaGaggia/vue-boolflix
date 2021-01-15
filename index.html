@@ -37,7 +37,7 @@
                     <input
                         @keydown.enter="search"
                         type="text"
-                        placeholder="Cerca film e serie"
+                        placeholder="Search movies and series by title"
                         v-model="searchString"
                     />
                 </div>
@@ -56,10 +56,20 @@
                                     ><strong>Original Title:</strong> {{
                                     film.original_title }}</span
                                 >
-                                <span v-else>{{ film.original_name }}</span>
+                                <span v-else
+                                    ><strong>Original Title:</strong> {{
+                                    film.original_name }}</span
+                                >
                             </p>
-                            <p class="title" v-if="film.title">
-                                <strong>Title:</strong> {{ film.title }}
+                            <p class="title">
+                                <span v-if="film.title"
+                                    ><strong>Title:</strong> {{
+                                    film.original_title }}</span
+                                >
+                                <span v-else
+                                    ><strong>Title:</strong> {{ film.name
+                                    }}</span
+                                >
                             </p>
                             <p class="stars">
                                 <strong>Rating:</strong>
