@@ -6,6 +6,7 @@
 
 body {
     min-height: 100vh;
+    min-width: 890px;
     background-color: #141414;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -19,7 +20,6 @@ i {
 h1 {
     color: red;
     font-weight: 300;
-    margin-right: 40px;
 }
 
 /* ! HEADER */
@@ -31,7 +31,7 @@ header {
     padding: 20px;
 }
 
-.left-content {
+.right-content {
     display: flex;
     align-items: baseline;
 }
@@ -54,6 +54,7 @@ input[type="text"] {
     padding: 5px;
     outline: none;
     border: none;
+    margin-left: 20px;
 }
 
 /* ! MAIN */
@@ -74,6 +75,10 @@ main {
     cursor: pointer;
     margin: 50px 0;
     margin-right: 5px;
+    transition: 0.3s ease;
+}
+.film:hover {
+    transform: scale(1.03);
 }
 .film:hover .film-info {
     display: flex;

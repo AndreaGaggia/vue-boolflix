@@ -17,10 +17,10 @@
     <body>
         <div id="app">
             <header>
-                <div class="left-content">
-                    <h1>BOOLFLIX</h1>
+                <h1>BOOLFLIX</h1>
+                <div class="right-content">
                     <div class="genre-selection" v-if="films">
-                        <label for="filter">Filter by genre</label>
+                        <label for="filter">Filter results by genre</label>
                         <select
                             id="filter"
                             @change="filter(optionValue)"
@@ -32,14 +32,14 @@
                             </option>
                         </select>
                     </div>
-                </div>
-                <div class="searchbar">
-                    <input
-                        @keydown.enter="search"
-                        type="text"
-                        placeholder="Search movies and series by title"
-                        v-model="searchString"
-                    />
+                    <div class="searchbar">
+                        <input
+                            @keydown.enter="search"
+                            type="text"
+                            placeholder="Search movies and series by title"
+                            v-model="searchString"
+                        />
+                    </div>
                 </div>
             </header>
 
