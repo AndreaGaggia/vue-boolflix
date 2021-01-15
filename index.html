@@ -21,7 +21,11 @@
                     <h1>BOOLFLIX</h1>
                     <div class="genre-selection" v-if="films">
                         <label for="filter">Filter by genre</label>
-                        <select name="" id="filter">
+                        <select
+                            id="filter"
+                            @change="filter(optionValue)"
+                            v-model="optionValue"
+                        >
                             <option value="All">All</option>
                             <option v-for="genre in options" :value="genre">
                                 {{ genre }}

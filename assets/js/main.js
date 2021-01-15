@@ -5,18 +5,24 @@ const app = new Vue({
     data: {
         searchString: "",
         films: null,
-        flags: null,
+        flags: [],
         options: [],
+        optionValue: "",
+        filtered: null,
+        all: null,
     },
     methods: {
         search() {
             this.options = [];
+            this.optionValue = "";
+
             this.getFilms;
             this.getSeries;
             Promise.all([this.getFilms(), this.getSeries()]).then((results) => {
                 let films = results[0].data.results;
                 let series = results[1].data.results;
                 this.films = films.concat(series);
+                this.all = this.films;
                 //add cast for both movies and series
                 this.films.forEach((film) => this.addCast(film));
                 //add genres
@@ -24,7 +30,18 @@ const app = new Vue({
             });
             this.searchString = "";
         },
-        generateOptions() {},
+        filter(option) {
+            let all = JSON.parse(JSON.stringify(this.all));
+            let filtered = [];
+            all.forEach((film) => {
+                if (film.genre_names.includes(option)) {
+                    filtered.push(film);
+                }
+            });
+            if (option && option != "All") {
+                this.films = filtered;
+            } else this.films = all;
+        },
         addCast(film) {
             if (film.hasOwnProperty("original_name")) {
                 return Vue.set(film, "cast", this.getSerieCast(film.id));
