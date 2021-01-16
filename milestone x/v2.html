@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>boolflix bonus</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+            integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./bonus.css" />
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <div class="left-content">
+                    <h1>boolflix <small>v2</small></h1>
+                </div>
+                <div class="right-content">
+                    <div class="search-filter">
+                        <label for="search-options">Search for:</label>
+                        <select id="search-options" v-model="searchBy">
+                            <option value="All">All</option>
+                            <option value="Movies">Movies</option>
+                            <option value="Tv Shows">Tv Shows</option>
+                        </select>
+                    </div>
+                    <input
+                        @keydown.enter="search"
+                        type="text"
+                        placeholder="Title"
+                        v-model="searchString"
+                    />
+                </div>
+            </header>
+            <main>
+                <h2 v-if="visible">
+                    Results for
+                    <em style="font-weight: 300">"{{resultsString}}"</em>
+                </h2>
+                <section class="movies" v-if="movies.length > 0">
+                    <h2>
+                        Movies
+                        <small style="font-weight: 300"
+                            >({{totalMovies}})</small
+                        >
+                    </h2>
+                    <div class="movies">
+                        <div
+                            class="media"
+                            v-for="movie in movies"
+                            :style="getBackground(movie.poster)"
+                        >
+                            <div class="movie-media-info">
+                                <h4>{{movie.title}}</h4>
+                                <p>{{movie.overview}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination" v-if="moviesPages > 1">
+                        <span
+                            class="page-item"
+                            v-for="n in moviesPages"
+                            @click="changePage(n, moviesPages)"
+                            :class="moviePage === n ? 'active' : ''"
+                        >
+                            {{n}}
+                        </span>
+                    </div>
+                </section>
+
+                <section class="series" v-if="series.length > 0">
+                    <h2>
+                        TV Shows
+                        <small style="font-weight: 300"
+                            >({{totalSeries}})</small
+                        >
+                    </h2>
+                    <div class="series">
+                        <div
+                            class="media"
+                            v-for="movie in series"
+                            :style="getBackground(movie.poster)"
+                        >
+                            <div class="serie-media-info">
+                                <h4>{{movie.title}}</h4>
+                                <p>{{movie.overview}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination" v-if="seriesPages > 1">
+                        <span
+                            class="page-item"
+                            v-for="n in seriesPages"
+                            @click="changePage(n, seriesPages)"
+                            :class="seriePage === n ? 'active' : ''"
+                        >
+                            {{n}}
+                        </span>
+                    </div>
+                </section>
+
+                <section
+                    class="trending"
+                    v-if="movies.length === 0 && series.length === 0"
+                >
+                    <h2>Trending this week</h2>
+                    <h3>Movies</h3>
+                    <div class="trending-movies">
+                        <div
+                            class="trending-media"
+                            v-for="movie in trendingMovies"
+                            :style="getBackground(movie.poster)"
+                        >
+                            <div class="trending-media-info">
+                                <h4>{{movie.title}}</h4>
+                                <p>{{movie.overview}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>TV Shows</h3>
+                    <div class="trending-series">
+                        <div
+                            class="trending-media"
+                            v-for="serie in trendingSeries"
+                            :style="getBackground(serie.poster)"
+                        >
+                            <div class="trending-media-info">
+                                <h4>{{serie.title}}</h4>
+                                <p>{{serie.overview}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <script src="./bonus.js"></script>
+    </body>
+</html>
