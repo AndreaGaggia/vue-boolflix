@@ -8,11 +8,14 @@ const app = new Vue({
         movies: [],
         totalMovies: null,
         moviesPages: null,
+        moviesInterval: [],
         moviePage: 1,
         series: [],
         totalSeries: null,
         seriesPages: null,
+        seriesInterval: [],
         seriePage: 1,
+        initialPage: 1,
         trendingMovies: [],
         trendingSeries: [],
         visible: false,
@@ -45,6 +48,9 @@ const app = new Vue({
                 .then((response) => {
                     let mPages = response.data.total_pages;
                     this.moviesPages = mPages;
+                    this.moviesInterval = this.setInitialInterval(
+                        this.moviesPages
+                    );
                     let totalMovies = response.data.total_results;
                     this.totalMovies = totalMovies;
                     let results = response.data.results;
@@ -75,6 +81,9 @@ const app = new Vue({
                 .then((response) => {
                     let sPages = response.data.total_pages;
                     this.seriesPages = sPages;
+                    this.seriesInterval = this.setInitialInterval(
+                        this.seriesPages
+                    );
                     let totalSeries = response.data.total_results;
                     this.totalSeries = totalSeries;
                     let results = response.data.results;
@@ -111,6 +120,12 @@ const app = new Vue({
                     let sPages = response[1].data.total_pages;
                     this.moviesPages = mPages;
                     this.seriesPages = sPages;
+                    this.moviesInterval = this.setInitialInterval(
+                        this.moviesPages
+                    );
+                    this.seriesInterval = this.setInitialInterval(
+                        this.seriesPages
+                    );
                     let totalMovies = response[0].data.total_results;
                     this.totalMovies = totalMovies;
                     let totalSeries = response[1].data.total_results;
@@ -255,6 +270,50 @@ const app = new Vue({
                         this.seriePage = page;
                     })
                     .catch((error) => console.log(error));
+            }
+        },
+        setInitialInterval(total_pages) {
+            let interval = [];
+            if (total_pages <= 10) {
+                for (let i = 1; i <= total_pages; i++) {
+                    interval.push(i);
+                }
+            } else {
+                for (let i = 1; i <= 10; i++) {
+                    interval.push(i);
+                }
+            }
+            return interval;
+        },
+        changeInterval(media_interval) {
+            if (media_interval == this.moviesInterval) {
+                let interval = [];
+                let newPage =
+                    this.moviesInterval[this.moviesInterval.length - 1] + 1;
+                for (
+                    let i = newPage;
+                    i < newPage + 10 && i <= this.moviesPages;
+                    i++
+                ) {
+                    interval.push(i);
+                }
+                this.moviePage = newPage;
+                this.moviesInterval = interval;
+                this.changePage(this.moviePage, this.moviesPages);
+            } else {
+                let interval = [];
+                let newPage =
+                    this.seriesInterval[this.seriesInterval.length - 1] + 1;
+                for (
+                    let i = newPage;
+                    i < newPage + 10 && i <= this.seriesPages;
+                    i++
+                ) {
+                    interval.push(i);
+                }
+                this.seriePage = newPage;
+                this.seriesInterval = interval;
+                this.changePage(this.seriePage, this.seriesPages);
             }
         },
     },

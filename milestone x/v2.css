@@ -82,7 +82,7 @@ div.series {
 .media:hover .movie-media-info,
 .media:hover .serie-media-info {
     transition: height 0.3s ease;
-    height: 200px;
+    height: 256.5px;
 }
 
 /* pagination */
@@ -91,6 +91,7 @@ div.series {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 .page-item {
     width: 40px;
@@ -100,9 +101,13 @@ div.series {
     place-items: center;
     border-radius: 4px;
 }
-
 .active {
     background-color: yellow;
     color: #000;
     border: 1px solid #000;
+}
+.more-than-ten,
+.last-page {
+    display: flex;
+    align-items: center;
 }

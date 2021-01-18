@@ -62,13 +62,44 @@
                         </div>
                     </div>
                     <div class="pagination" v-if="moviesPages > 1">
+                        <div class="more-than-ten" v-if="moviePage > 10">
+                            <span
+                                class="page-item"
+                                @click="moviePage = 1, moviesInterval = setInitialInterval(moviesPages), changePage(initialPage, moviesPages)"
+                            >
+                                {{initialPage}}
+                            </span>
+                            <span class="page-item">...</span>
+                        </div>
                         <span
                             class="page-item"
-                            v-for="n in moviesPages"
+                            v-for="n in moviesInterval"
                             @click="changePage(n, moviesPages)"
                             :class="moviePage === n ? 'active' : ''"
                         >
                             {{n}}
+                        </span>
+                        <div
+                            class="last-page"
+                            v-if="!moviesInterval.includes(moviesPages)"
+                        >
+                            <span class="page-item">...</span>
+                            <span
+                                class="page-item"
+                                @click="moviePage = moviesPages, moviesInterval = [moviesPages], changePage(moviesPages, moviesPages)"
+                            >
+                                {{moviesPages}}
+                            </span>
+                        </div>
+                        <span
+                            class="page-item"
+                            v-if="moviesInterval.length == 10 && !moviesInterval.includes(moviesPages)"
+                            @click="changeInterval(moviesInterval)"
+                        >
+                            <i
+                                style="color: red"
+                                class="fas fa-fast-forward"
+                            ></i>
                         </span>
                     </div>
                 </section>
@@ -93,13 +124,44 @@
                         </div>
                     </div>
                     <div class="pagination" v-if="seriesPages > 1">
+                        <div class="more-than-ten" v-if="seriePage > 10">
+                            <span
+                                class="page-item"
+                                @click="seriePage = 1, seriesInterval = setInitialInterval(seriesPages), changePage(initialPage, seriesPages)"
+                            >
+                                {{initialPage}}
+                            </span>
+                            <span class="page-item">...</span>
+                        </div>
                         <span
                             class="page-item"
-                            v-for="n in seriesPages"
+                            v-for="n in seriesInterval"
                             @click="changePage(n, seriesPages)"
                             :class="seriePage === n ? 'active' : ''"
                         >
                             {{n}}
+                        </span>
+                        <div
+                            class="last-page"
+                            v-if="!seriesInterval.includes(seriesPages)"
+                        >
+                            <span class="page-item">...</span>
+                            <span
+                                class="page-item"
+                                @click="seriePage = seriesPages, seriesInterval = [seriesPages], changePage(seriesPages, seriesPages)"
+                            >
+                                {{seriesPages}}
+                            </span>
+                        </div>
+                        <span
+                            class="page-item"
+                            v-if="seriesInterval.length == 10 && !seriesInterval.includes(seriesPages)"
+                            @click="changeInterval(seriesInterval)"
+                        >
+                            <i
+                                style="color: red"
+                                class="fas fa-fast-forward"
+                            ></i>
                         </span>
                     </div>
                 </section>
